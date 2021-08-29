@@ -36,7 +36,6 @@ mods_load_order = [
     '.ignore',
     '.repo',
     '.stash',
-    '.statusbar',
     '.flow',
     '.file',
 ]
@@ -71,7 +70,6 @@ try:
     from .git.repo import *  # noqa
     from .git.stash import *  # noqa
     from .git.status import *  # noqa
-    from .git.statusbar import *  # noqa
 except (ImportError, ValueError):
     # Python 2
     from git.core import *  # noqa
@@ -89,4 +87,3 @@ except (ImportError, ValueError):
     from git.repo import *  # noqa
     from git.stash import *  # noqa
     from git.status import *  # noqa
-    from git.statusbar import *  # noqa
