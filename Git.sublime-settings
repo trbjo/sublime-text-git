@@ -41,8 +41,6 @@
 	// e.g. "Packages/Git/syntax/Git Commit Message.tmLanguage"
 	,"diff_syntax": "Packages/Git/syntax/Git Diff.sublime-syntax"
 
-	// Rulers for commit view
-	,"commit_rulers": [70]
 
 	// Watch for gitignore changes?
 	// When found, import them. This will hide the ignored files from the sidebar.
