@@ -1,9 +1,8 @@
-from __future__ import absolute_import, unicode_literals, print_function, division
-
 import codecs
 import functools
 import tempfile
 import os
+from subprocess import check_output, Popen
 
 import sublime
 import sublime_plugin
@@ -11,6 +10,129 @@ from . import GitTextCommand, GitWindowCommand, plugin_file, view_contents, _mak
 from .add import GitAddSelectedHunkCommand
 
 history = []
+
+
+class PromptGitCommand(GitWindowCommand):
+    last_selected = 0
+
+    def is_enabled(self):
+        view = self.window.active_view()
+        if view:
+            scope = view.scope_name(view.sel()[0].begin()).split(' ')[0]
+            if scope == 'text.git.commit':
+                return True
+        return False
+
+    def run(self):
+        git_actions_pretty = [
+        '1: Commit, Rebase and Push',
+        '2: Commit and Push',
+        '3: Commit only',
+        '4: Close without committing'
+        ]
+
+        self.window.show_quick_panel(
+            git_actions_pretty,
+            self.transform,
+            selected_index=self.last_selected)
+
+    def transform(self, i):
+        print('hej')
+        print(i)
+        if i == -1:
+            return
+        self.last_selected = i
+
+        view = sublime.active_window().active_view()
+
+        if i != 3:
+            view.run_command('save')
+
+        view.set_scratch(True)
+        view.close()
+
+        if i >= 2:
+            return
+
+        pwd = self.window.active_view().file_name().rsplit('/', 1)[0]
+
+        if i == 0:
+            self.run_command(['git', '-C', pwd, 'pull', '--rebase'], callback=self.push)
+        else:
+            self.push('')
+
+
+    def push(self, _) -> None:
+        pwd = self.window.active_view().file_name().rsplit('/', 1)[0]
+        self.run_command(['git', '-C', pwd, 'push'])
+
+
+class GitCommitNewCommand(sublime_plugin.WindowCommand):
+    global git_dirs
+    global non_git_dirs
+    git_dirs = []
+    non_git_dirs = []
+
+    def anything_to_commit(self, pwd: str) -> bool:
+        get_status = ['git', '-C', pwd, '-c', 'color.ui=never', 'status', '--porcelain', '--untracked-files=no']
+        res_list = check_output(get_status).decode('utf-8').split('\n')
+        return any(not git_status.startswith(' ') for git_status in res_list)
+
+    def run(self):
+        pwd = self.window.active_view().file_name().rsplit('/', 1)[0]
+        try:
+            Popen(['git', '-C', pwd, 'commit', '-v'])
+        except:
+            sublime.status_message('Nothing to commit')
+
+    def is_enabled(self):
+
+        view = self.window.active_view()
+        if view is None:
+            return False
+
+        file = view.file_name()
+        if file is None:
+            return False
+
+        pwd = file.rsplit('/', 1)[0]
+        if pwd.endswith('.git'):
+            pwd = pwd[0:-4]
+
+        for repo in git_dirs:
+            if repo in pwd:
+                if self.anything_to_commit(pwd) == False:
+                    return False
+                else:
+                    return True
+        for directory in non_git_dirs:
+            if directory in pwd:
+                return False
+
+        result = self.is_git_dir(pwd)
+        if result:
+            git_dirs.append(result)
+
+            if self.anything_to_commit(pwd) == False:
+                return False
+            else:
+                return True
+
+        else:
+            non_git_dirs.append(pwd)
+            return False
+
+
+    def is_git_dir(self, pwd: str) -> str:
+        while pwd:
+            if os.path.exists(os.path.join(pwd, '.git')):
+                return pwd
+            parent = os.path.realpath(os.path.join(pwd, os.path.pardir))
+            if parent == pwd:
+                # /.. == /
+                return ''
+            pwd = parent
+
 
 
 class GitQuickCommitCommand(GitTextCommand):
