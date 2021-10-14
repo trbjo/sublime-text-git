@@ -78,18 +78,6 @@ class GitRawCommand(GitWindowCommand):
         msg.sel().add(sublime.Region(0, 0))
 
 
-class GitGuiCommand(GitTextCommand):
-    def run(self, edit):
-        command = ['git', 'gui']
-        self.run_command(command)
-
-
-class GitGitkCommand(GitTextCommand):
-    def run(self, edit):
-        command = ['gitk']
-        self.run_command(command)
-
-
 # called by GitWindowCommand
 class GitScratchOutputCommand(sublime_plugin.TextCommand):
     def run(self, edit, output='', output_file=None, clear=False):

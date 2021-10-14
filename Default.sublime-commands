@@ -1,4 +1,13 @@
 [
+    {
+      "caption": "Git: Add This File",
+      "command": "git_add_untracked_file",
+    },
+    {
+      "caption": "Git Commit New",
+      "command": "git_commit_new",
+    },
+
     {   "caption": "Git: Init",
         "command": "git_init"
     }
@@ -287,22 +296,6 @@
     ,{
         "caption": "Git: Commit Selected Hunk",
         "command": "git_commit_selected_hunk"
-    }
-    ,{
-        "caption": "Git: Gui",
-        "command": "git_gui"
-    }
-    ,{
-        "caption": "Git: Gitk This File",
-        "command": "git_gitk_this_file"
-    }
-    ,{
-        "caption": "Git: Gitk",
-        "command": "git_gitk"
-    }
-    ,{
-        "caption": "Git: Gitk All",
-        "command": "git_gitk_all"
     }
     ,{
         "caption": "Git: Commit history",

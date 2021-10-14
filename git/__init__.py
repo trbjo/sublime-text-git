@@ -160,8 +160,6 @@ def find_binary(cmd):
 
 
 GIT = find_binary('git')
-GITK = find_binary('gitk')
-
 
 def output_error_message(output, *args, **kwargs):
     # print('error', output, args, kwargs)
@@ -280,11 +278,6 @@ class GitCommand(object):
                     command[0] = s.get('git_command') or us.get('git_binary')
                 elif GIT:
                     command[0] = GIT
-        if command[0] == 'gitk' and s.get('gitk_command'):
-            if s.get('gitk_command'):
-                command[0] = s.get('gitk_command')
-            elif GITK:
-                command[0] = GITK
         if not callback:
             callback = self.generic_done
 
