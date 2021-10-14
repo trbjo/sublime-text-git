@@ -5,6 +5,9 @@ import sublime
 from . import GitTextCommand, GitWindowCommand, git_root
 from .status import GitStatusCommand
 
+class GitAddUntrackedFileCommand(GitTextCommand):
+    def run(self, _):
+        self.run_command(['git', 'add', self.get_file_name()])
 
 class GitAddChoiceCommand(GitStatusCommand):
     def status_filter(self, item):
