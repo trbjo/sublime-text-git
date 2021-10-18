@@ -37,8 +37,6 @@ class PromptGitCommand(GitWindowCommand):
             selected_index=self.last_selected)
 
     def transform(self, i):
-        print('hej')
-        print(i)
         if i == -1:
             return
         self.last_selected = i
