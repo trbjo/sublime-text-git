@@ -182,6 +182,12 @@ class CommandThread(threading.Thread):
             self.stdout = kwargs["stdout"]
         else:
             self.stdout = subprocess.PIPE
+
+        if "is_generic_callback" in kwargs:
+            self.is_generic_callback = kwargs["is_generic_callback"]
+        else:
+            self.is_generic_callback = False
+
         self.fallback_encoding = fallback_encoding
         self.error_suppresses_output = error_suppresses_output
         self.kwargs = kwargs
@@ -244,7 +250,8 @@ class CommandThread(threading.Thread):
                 output = e.strerror
         finally:
             self.command_lock.release()
-            main_thread(callback, output, **self.kwargs)
+            if self.is_generic_callback == False and proc.returncode == 0:
+                main_thread(callback, output, **self.kwargs)
 
 
 # A base for all commands
@@ -280,6 +287,7 @@ class GitCommand(object):
                     command[0] = GIT
         if not callback:
             callback = self.generic_done
+            kwargs['is_generic_callback'] = True
 
         thread = CommandThread(command, callback, **kwargs)
         thread.start()
