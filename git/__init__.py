@@ -250,7 +250,16 @@ class CommandThread(threading.Thread):
                 output = e.strerror
         finally:
             self.command_lock.release()
-            if self.is_generic_callback == False and proc.returncode == 0:
+
+            if (self.is_generic_callback == True
+                and proc.returncode == 0
+                and output is not None
+                and output != ''):
+                proc_two = subprocess.Popen(
+                   ['notify-send.sh', 'Sublime Text Git', output, '--icon' ,'sublime-text',
+                   '--default-action=swaymsg [app_id="^sublime_text$"] focus; [app_id="^PopUp$"] move scratchpad']
+                )
+            else:
                 main_thread(callback, output, **self.kwargs)
 
 
