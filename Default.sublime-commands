@@ -4,7 +4,7 @@
       "command": "git_add_untracked_file",
     },
     {
-      "caption": "Git Commit New",
+      "caption": "Git Commit",
       "command": "git_commit_new",
     },
 
@@ -116,10 +116,6 @@
     ,{
         "caption": "Git: Diff Tool Staged",
         "command": "git_diff_tool_commit_all"
-    }
-    ,{
-        "caption": "Git: Commit",
-        "command": "git_commit"
     }
     ,{
         "caption": "Git: Amend Commit",
