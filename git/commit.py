@@ -46,7 +46,7 @@ class PromptGitCommand(GitWindowCommand):
         if i != 3:
             view.run_command('save')
 
-        # view.set_scratch(True)
+        view.set_scratch(True)
         view.close()
 
         if i >= 2:
