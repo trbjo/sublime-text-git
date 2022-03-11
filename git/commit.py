@@ -72,7 +72,7 @@ class GitCommitNewCommand(sublime_plugin.WindowCommand):
     non_git_dirs = []
 
     def anything_to_commit(self, pwd: str) -> bool:
-        get_status = ['git', '-C', pwd, '-c', 'color.ui=never', 'status', '--porcelain', '--untracked-files=no']
+        get_status = ['git', '-C', pwd, 'status', '--porcelain', '--untracked-files=no']
         res_list = check_output(get_status).decode('utf-8').split('\n')
         return any(not git_status.startswith(' ') for git_status in res_list)
 
