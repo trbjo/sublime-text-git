@@ -74,7 +74,7 @@ class GitCommitNewCommand(sublime_plugin.WindowCommand):
     def anything_to_commit(self, pwd: str) -> bool:
         get_status = ['git', '-C', pwd, 'status', '--porcelain', '--untracked-files=no']
         res_list = check_output(get_status).decode('utf-8').split('\n')
-        return any(git_status[0].isalpha() for git_status in res_list)
+        return any(git_status[0].isalpha() for git_status in res_list if git_status != '')
 
     def run(self):
         pwd = self.window.active_view().file_name().rsplit('/', 1)[0]
