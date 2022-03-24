@@ -99,10 +99,7 @@ class GitCommitNewCommand(sublime_plugin.WindowCommand):
 
         for repo in git_dirs:
             if repo in pwd:
-                if self.anything_to_commit(pwd) == False:
-                    return False
-                else:
-                    return True
+                return self.anything_to_commit(pwd)
         for directory in non_git_dirs:
             if directory in pwd:
                 return False
@@ -111,10 +108,7 @@ class GitCommitNewCommand(sublime_plugin.WindowCommand):
         if result:
             git_dirs.append(result)
 
-            if self.anything_to_commit(pwd) == False:
-                return False
-            else:
-                return True
+            return self.anything_to_commit(pwd)
 
         else:
             non_git_dirs.append(pwd)
