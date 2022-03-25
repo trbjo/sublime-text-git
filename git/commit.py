@@ -56,7 +56,7 @@ class PromptGitCommand(GitWindowCommand):
         if i == 0:
             self.run_command(['git', '-C', pwd, 'pull', '--rebase'], callback=self.push, working_dir=pwd)
         else:
-            self.push()
+            self.push(pwd)
 
     def push(self, _) -> None:
         self.run_command(['git', 'push'])
