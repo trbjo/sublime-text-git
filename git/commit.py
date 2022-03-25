@@ -37,11 +37,12 @@ class PromptGitCommand(GitWindowCommand):
             selected_index=self.last_selected)
 
     def transform(self, i):
+        view = sublime.active_window().active_view()
+        pwd = view.file_name().rsplit('/', 1)[0]
+
         if i == -1:
             return
         self.last_selected = i
-
-        view = sublime.active_window().active_view()
 
         if i != 3:
             view.run_command('save')
@@ -52,17 +53,13 @@ class PromptGitCommand(GitWindowCommand):
         if i >= 2:
             return
 
-        pwd = self.window.active_view().file_name().rsplit('/', 1)[0]
-
         if i == 0:
-            self.run_command(['git', '-C', pwd, 'pull', '--rebase'], callback=self.push)
+            self.run_command(['git', '-C', pwd, 'pull', '--rebase'], callback=self.push, working_dir=pwd)
         else:
-            self.push('')
-
+            self.push()
 
     def push(self, _) -> None:
-        pwd = self.window.active_view().file_name().rsplit('/', 1)[0]
-        self.run_command(['git', '-C', pwd, 'push'])
+        self.run_command(['git', 'push'])
 
 
 class GitCommitNewCommand(sublime_plugin.WindowCommand):
