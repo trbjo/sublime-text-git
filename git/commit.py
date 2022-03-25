@@ -84,7 +84,6 @@ class GitCommitNewCommand(sublime_plugin.WindowCommand):
             sublime.status_message('Nothing to commit')
 
     def is_enabled(self):
-
         view = self.window.active_view()
         if view is None:
             return False
@@ -101,15 +100,13 @@ class GitCommitNewCommand(sublime_plugin.WindowCommand):
             if repo in pwd:
                 return self.anything_to_commit(pwd)
         for directory in non_git_dirs:
-            if directory in pwd:
+            if directory == pwd:
                 return False
 
         result = self.is_git_dir(pwd)
         if result:
             git_dirs.append(result)
-
             return self.anything_to_commit(pwd)
-
         else:
             non_git_dirs.append(pwd)
             return False
